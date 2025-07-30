@@ -27,14 +27,19 @@
         <!-- 如果 common 模块需要用到 JSON 工具，可以在这里引入 -->
         <!-- 注意：无需写版本号，会自动从父模块的 dependencyManagement 获取 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
         </dependency>
 
         <!-- 如果有实体类，可能需要JPA注解 -->
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
     </dependencies>
 
