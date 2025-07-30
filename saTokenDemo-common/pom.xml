@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 1. 必须继承自己的父模块 -->
+    <parent>
+        <groupId>com.kagy</groupId>
+        <artifactId>saTokenDemo-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>saTokenDemo-common</artifactId>
+    <!-- packaging 默认为 jar, 无需显式声明 -->
+
+    <!-- 2. properties 已从父模块继承，这里不再需要 -->
+
+    <dependencies>
+        <!-- common 模块通常需要 lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 如果 common 模块需要用到 JSON 工具，可以在这里引入 -->
+        <!-- 注意：无需写版本号，会自动从父模块的 dependencyManagement 获取 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+
+        <!-- 如果有实体类，可能需要JPA注解 -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
