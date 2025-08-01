@@ -81,6 +81,21 @@ public class Result<T> {
         return new Result<>(code, message, data);
     }
 
+
+    /**
+     * 失败响应（仅消息，使用默认服务器错误状态码）
+     */
+    public static <T> Result<T> error(String message) {
+        return new Result<>(StatusCode.INTERNAL_SERVER_ERROR, message, null);
+    }
+
+    /**
+     * 失败响应（仅消息和数据，使用默认服务器错误状态码）
+     */
+    public static <T> Result<T> error(String message, T data) {
+        return new Result<>(StatusCode.INTERNAL_SERVER_ERROR, message, data);
+    }
+
     // ========== 常用失败响应快捷方法 ==========
 
     /**
