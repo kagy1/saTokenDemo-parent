@@ -36,7 +36,7 @@ public class SysController {
     }
 
     // 删除
-    @DeleteMapping("{/roleId}")
+    @DeleteMapping("/{roleId}")
     public Result delete(@PathVariable("roleId") Long roleId) {
         if (sysRoleService.removeById(roleId)) {
             return Result.success("删除成功！");
@@ -49,7 +49,7 @@ public class SysController {
     public Result getList(RoleParam roleParam) {
         IPage<SysRole> page = new Page<>(roleParam.getCurrentPage(), roleParam.getPageSize());
         QueryWrapper<SysRole> sysRoleQueryWrapper = new QueryWrapper<>();
-        if (StrUtil.isBlank(roleParam.getRoleName())) {
+        if (StrUtil.isNotBlank(roleParam.getRoleName())) {
             sysRoleQueryWrapper.lambda().like(SysRole::getRoleName, roleParam.getRoleName());
         }
         IPage<SysRole> list = sysRoleService.page(page, sysRoleQueryWrapper);
