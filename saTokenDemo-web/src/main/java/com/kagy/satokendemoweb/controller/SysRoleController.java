@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kagy.satokendemoweb.entity.RoleParam;
+import com.kagy.satokendemoweb.entity.SelectItem;
 import com.kagy.satokendemoweb.entity.SysRole;
 import com.kagy.satokendemoweb.service.SysRoleService;
 import com.kagy.utils.Result;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/role")
@@ -57,5 +60,21 @@ public class SysRoleController {
         }
         IPage<SysRole> list = sysRoleService.page(page, sysRoleQueryWrapper);
         return Result.success(list);
+    }
+
+    // 角色下拉数据
+    @PostMapping("/selectList")
+    public Result selectList() {
+        List<SysRole> list = sysRoleService.list();
+        // 返回下拉数据
+        List<SelectItem> selectItems = new ArrayList<>();
+        list.stream().forEach(item -> {
+            SelectItem vo = new SelectItem();
+            vo.setCheck(false);
+            vo.setLabel(item.getRoleName());
+            vo.setValue(item.getRoleId());
+            selectItems.add(vo);
+        });
+        return Result.success("查询成功", selectItems);
     }
 }
