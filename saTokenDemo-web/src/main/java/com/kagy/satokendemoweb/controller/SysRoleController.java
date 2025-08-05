@@ -11,15 +11,18 @@ import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/api/role")
-public class SysController {
+public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
 
     // 新增
     @PostMapping
     public Result add(@RequestBody SysRole sysRole) {
+        sysRole.setCreateTime(new Date());
         if (sysRoleService.save(sysRole)) {
             return Result.success("新增成功！");
         }
@@ -29,7 +32,7 @@ public class SysController {
     // 编辑
     @PutMapping
     public Result edit(@RequestBody SysRole sysRole) {
-        if (sysRoleService.save(sysRole)) {
+        if (sysRoleService.updateById(sysRole)) {
             return Result.success("编辑成功！");
         }
         return Result.error("编辑失败！");

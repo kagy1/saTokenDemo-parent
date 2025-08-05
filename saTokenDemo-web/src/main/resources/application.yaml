@@ -33,3 +33,10 @@ sa-token:
   token-style: uuid
   # 是否输出操作日志
   is-log: true
+
+mybatis-plus:
+  mapper-locations: classpath:mappers/*xml  # 指定 Mapper 映射文件（即 .xml 文件）的路径。
+  type-aliases-package: com.kagy.reggietestl.mybatis.entity  # 指定实体类所在的包路径。
+  configuration:
+    map-underscore-to-camel-case: true  # 开启驼峰命名规则，自动将数据库字段转为驼峰命名。
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开启 MyBatis 日志输出。
