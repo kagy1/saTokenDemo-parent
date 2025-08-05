@@ -1,9 +1,18 @@
 package com.kagy.satokendemoweb.controller;
 
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.kagy.satokendemoweb.entity.SysUser;
+import com.kagy.satokendemoweb.entity.UserParam;
+import com.kagy.satokendemoweb.service.SysUserService;
+import com.kagy.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -14,7 +23,56 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2025-08-05
  */
 @RestController
-@RequestMapping("/sys-user")
+@RequestMapping("/api/sysUser")
 public class SysUserController {
+    @Autowired
+    private SysUserService sysUserService;
 
+    @PostMapping
+    public Result add(@RequestBody SysUser sysUser) {
+        sysUser.setCreateTime(LocalDateTime.now());
+        if (sysUserService.save(sysUser)) {
+            return Result.success("新增成功");
+        } else {
+            return Result.error("新增失败");
+        }
+    }
+
+    @PutMapping
+    public Result edit(@RequestBody SysUser sysUser) {
+        sysUser.setUpdateTime(LocalDateTime.now());
+        if (sysUserService.updateById(sysUser)) {
+            return Result.success("编辑成功");
+        } else {
+            return Result.error("编辑失败");
+        }
+    }
+
+    @DeleteMapping("/{userId}")
+    public Result delete(@PathVariable("userId") Long userId) {
+        if (sysUserService.removeById(userId)) {
+            return Result.success("删除成功");
+        } else {
+            return Result.error("删除失败");
+        }
+    }
+
+    @GetMapping("/list")
+    public Result list(UserParam userParam) {
+        // 构造分页对象
+        IPage<SysUser> sysUserIPage = new Page<>(userParam.getCurrentPage(), userParam.getPageSize());
+        // 构造查询条件
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<SysUser>()
+                .like(StrUtil.isNotBlank(userParam.getUsername()), SysUser::getUsername, userParam.getUsername())
+                .like(StrUtil.isNotBlank(userParam.getNickName()), SysUser::getNickName, userParam.getNickName())
+                .like(StrUtil.isNotBlank(userParam.getEmail()), SysUser::getEmail, userParam.getEmail())
+                .like(StrUtil.isNotBlank(userParam.getPhone()), SysUser::getPhone, userParam.getPhone());
+        queryWrapper.orderByAsc(SysUser::getCreateTime);
+        // 执行查询
+        IPage<SysUser> sysUserIPageResult = sysUserService.page(sysUserIPage, queryWrapper);
+        return Result.success(sysUserIPageResult);
+    }
 }
+
+
+

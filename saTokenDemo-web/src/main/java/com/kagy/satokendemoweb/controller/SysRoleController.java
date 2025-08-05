@@ -11,7 +11,7 @@ import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/role")
@@ -22,7 +22,7 @@ public class SysRoleController {
     // 新增
     @PostMapping
     public Result add(@RequestBody SysRole sysRole) {
-        sysRole.setCreateTime(new Date());
+        sysRole.setCreateTime(LocalDateTime.now());
         if (sysRoleService.save(sysRole)) {
             return Result.success("新增成功！");
         }
