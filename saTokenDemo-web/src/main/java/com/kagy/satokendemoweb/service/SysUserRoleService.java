@@ -1,5 +1,6 @@
 package com.kagy.satokendemoweb.service;
 
+import com.kagy.satokendemoweb.entity.SysUser;
 import com.kagy.satokendemoweb.entity.SysUserRole;
 import com.baomidou.mybatisplus.extension.service.IService;
 

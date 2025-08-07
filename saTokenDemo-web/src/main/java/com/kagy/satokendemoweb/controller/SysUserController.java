@@ -41,20 +41,14 @@ public class SysUserController {
     @PutMapping
     public Result edit(@RequestBody SysUser sysUser) {
         sysUser.setUpdateTime(LocalDateTime.now());
-        if (sysUserService.updateById(sysUser)) {
-            return Result.success("编辑成功");
-        } else {
-            return Result.error("编辑失败");
-        }
+        sysUserService.editUser(sysUser);
+        return Result.success("编辑成功");
     }
 
     @DeleteMapping("/{userId}")
     public Result delete(@PathVariable("userId") Long userId) {
-        if (sysUserService.removeById(userId)) {
-            return Result.success("删除成功");
-        } else {
-            return Result.error("删除失败");
-        }
+        sysUserService.deleteUser(userId);
+        return Result.success("删除成功");
     }
 
     @GetMapping("/list")
