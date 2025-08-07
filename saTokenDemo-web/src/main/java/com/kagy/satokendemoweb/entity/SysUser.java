@@ -13,6 +13,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -77,5 +78,5 @@ public class SysUser implements Serializable {
     private LocalDateTime updateTime;
 
     @TableField(exist = false)
-    private String roleId;
+    private List<Integer> roleIds;
 }

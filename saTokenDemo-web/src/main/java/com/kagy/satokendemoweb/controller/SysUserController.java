@@ -31,11 +31,8 @@ public class SysUserController {
     @PostMapping
     public Result add(@RequestBody SysUser sysUser) {
         sysUser.setCreateTime(LocalDateTime.now());
-        if (sysUserService.save(sysUser)) {
-            return Result.success("新增成功");
-        } else {
-            return Result.error("新增失败");
-        }
+        sysUserService.saveUser(sysUser);
+        return Result.success("新增成功");
     }
 
     @PutMapping
@@ -62,8 +59,9 @@ public class SysUserController {
                 .like(StrUtil.isNotBlank(userParam.getEmail()), SysUser::getEmail, userParam.getEmail())
                 .like(StrUtil.isNotBlank(userParam.getPhone()), SysUser::getPhone, userParam.getPhone());
         queryWrapper.orderByAsc(SysUser::getCreateTime);
-        // 执行查询
-        IPage<SysUser> sysUserIPageResult = sysUserService.page(sysUserIPage, queryWrapper);
+
+        // 使用带角色信息的查询方法
+        IPage<SysUser> sysUserIPageResult = sysUserService.getUserListWithRoles(sysUserIPage, queryWrapper);
         return Result.success(sysUserIPageResult);
     }
 }

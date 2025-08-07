@@ -1,7 +1,9 @@
 package com.kagy.satokendemoweb.service;
 
-import com.kagy.satokendemoweb.entity.SysUser;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kagy.satokendemoweb.entity.SysUser;
 
 /**
  * <p>
@@ -12,6 +14,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2025-08-05
  */
 public interface SysUserService extends IService<SysUser> {
+    IPage<SysUser> getUserListWithRoles(IPage<SysUser> page, LambdaQueryWrapper<SysUser> queryWrapper);
+
     void saveUser(SysUser sysUser);
 
     void editUser(SysUser sysUser);
