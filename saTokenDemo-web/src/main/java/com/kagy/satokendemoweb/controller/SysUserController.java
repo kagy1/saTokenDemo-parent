@@ -3,6 +3,7 @@ package com.kagy.satokendemoweb.controller;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kagy.satokendemoweb.entity.SysUser;
@@ -64,6 +65,17 @@ public class SysUserController {
         IPage<SysUser> sysUserIPageResult = sysUserService.getUserListWithRoles(sysUserIPage, queryWrapper);
         return Result.success(sysUserIPageResult);
     }
+
+    @PostMapping("/resetPassword")
+    public Result resetPassword(@RequestBody SysUser sysUser) {
+        LambdaUpdateWrapper<SysUser> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(SysUser::getUserId, sysUser.getUserId()).set(SysUser::getPassword, "123456");
+        if (sysUserService.update(updateWrapper)) {
+            return Result.success("重置密码成功");
+        }
+        return Result.error("重置密码失败");
+    }
+
 }
 
 
