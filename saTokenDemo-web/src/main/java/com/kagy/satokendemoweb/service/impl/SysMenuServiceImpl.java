@@ -1,10 +1,14 @@
 package com.kagy.satokendemoweb.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kagy.satokendemoweb.entity.MakeMenuTree;
 import com.kagy.satokendemoweb.entity.SysMenu;
 import com.kagy.satokendemoweb.mapper.SysMenuMapper;
-import com.kagy.satokendemoweb.service.ISysMenuService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kagy.satokendemoweb.service.SysMenuService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,6 +19,23 @@ import org.springframework.stereotype.Service;
  * @since 2025-08-08
  */
 @Service
-public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements ISysMenuService {
+public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
 
+    @Override
+    public List<SysMenu> getParent() {
+        LambdaQueryWrapper<SysMenu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.in(SysMenu::getType, "0", "1").orderByAsc(SysMenu::getOrderNum);
+        List<SysMenu> sysMenus = this.list(queryWrapper);
+        // 组装顶级树
+        SysMenu menu = new SysMenu();
+        menu.setTitle("顶级菜单");
+        menu.setLabel("顶级菜单");
+        menu.setParentId(-1L);
+        menu.setMenuId(0L);
+        menu.setValue(0L);
+        sysMenus.add(menu);
+        // 组装菜单树
+        List<SysMenu> tree = MakeMenuTree.makeTree(sysMenus, -1L);
+        return tree;
+    }
 }
