@@ -1,6 +1,7 @@
 package com.kagy.satokendemoweb.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.kagy.satokendemoweb.entity.MakeMenuTree;
 import com.kagy.satokendemoweb.entity.SysMenu;
 import com.kagy.satokendemoweb.service.SysMenuService;
@@ -50,6 +51,12 @@ public class SysMenuController {
     // 删除
     @DeleteMapping("/{menuId}")
     public Result delete(@PathVariable("menuId") Long menuId) {
+        LambdaQueryWrapper<SysMenu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysMenu::getParentId, menuId);
+        List<SysMenu> list = sysMenuService.list(queryWrapper);
+        if (list.size() > 0) {
+            return Result.error("存在子菜单，不能删除");
+        }
         if (sysMenuService.removeById(menuId)) {
             return Result.success("删除成功");
         } else {
