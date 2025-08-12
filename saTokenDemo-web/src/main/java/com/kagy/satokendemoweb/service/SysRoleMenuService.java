@@ -1,7 +1,8 @@
 package com.kagy.satokendemoweb.service;
 
-import com.kagy.satokendemoweb.entity.SysRoleMenu;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kagy.satokendemoweb.entity.SaveMenyParm;
+import com.kagy.satokendemoweb.entity.SysRoleMenu;
 
 /**
  * <p>
@@ -12,5 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2025-08-12
  */
 public interface SysRoleMenuService extends IService<SysRoleMenu> {
-
+    void saveRoleMenu(SaveMenyParm saveMenyParm);
 }

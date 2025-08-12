@@ -8,6 +8,7 @@ import com.kagy.satokendemoweb.entity.RoleParam;
 import com.kagy.satokendemoweb.entity.SaveMenyParm;
 import com.kagy.satokendemoweb.entity.SelectItem;
 import com.kagy.satokendemoweb.entity.SysRole;
+import com.kagy.satokendemoweb.service.SysRoleMenuService;
 import com.kagy.satokendemoweb.service.SysRoleService;
 import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ import java.util.List;
 public class SysRoleController {
     @Autowired
     private SysRoleService sysRoleService;
+
+    @Autowired
+    private SysRoleMenuService sysRoleMenuService;
 
     // 新增
     @PostMapping
@@ -82,7 +86,7 @@ public class SysRoleController {
     // 保存角色菜单
     @PostMapping("/saveRoleMenu")
     public Result saveRoleMenu(@RequestBody SaveMenyParm saveMenyParm) {
-
-        return null;
+        sysRoleMenuService.saveRoleMenu(saveMenyParm);
+        return Result.success("保存成功！");
     }
 }

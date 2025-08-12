@@ -1,8 +1,11 @@
 package com.kagy.satokendemoweb.mapper;
 
-import com.kagy.satokendemoweb.entity.SysRoleMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kagy.satokendemoweb.entity.SysRoleMenu;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysRoleMenuMapper extends BaseMapper<SysRoleMenu> {
-
+    // 保存角色菜单
+    boolean saveRoleMenu(@Param("roleId") Integer roleId, @Param("menuIds") List<Integer> menuIds);
 }
