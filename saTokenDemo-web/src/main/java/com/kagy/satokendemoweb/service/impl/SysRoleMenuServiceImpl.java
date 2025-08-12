@@ -29,6 +29,9 @@ public class SysRoleMenuServiceImpl extends ServiceImpl<SysRoleMenuMapper, SysRo
         LambdaQueryWrapper<SysRoleMenu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysRoleMenu::getRoleId, saveMenyParm.getRoleId());
         this.remove(queryWrapper);
+        if (saveMenyParm.getList() == null || saveMenyParm.getList().size() == 0) {
+            return;
+        }
         sysRoleMenuMapper.saveRoleMenu(saveMenyParm.getRoleId(), saveMenyParm.getList());
     }
 }
