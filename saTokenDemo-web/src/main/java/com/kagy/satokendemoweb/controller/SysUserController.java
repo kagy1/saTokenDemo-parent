@@ -152,23 +152,25 @@ public class SysUserController {
 
     // 查询菜单树
     @GetMapping("/getAssignTree")
-    public Result getAssingTree(AssignTreeParm parm) {
-        AssignTreeVo assignTreeVo = sysUserService.getAssignTree(parm);
+    public Result getAssingTree(AssignTreeParm param) {
+        AssignTreeVo assignTreeVo = sysUserService.getAssignTree(param);
         return Result.success("查询成功", assignTreeVo);
     }
 
     // 更新密码
     @PostMapping("/updatePassword")
-    public Result updatePassword(@RequestBody UpdatePassWordParm parm) {
-        SysUser user = sysUserService.getById(parm.getUserId());
-        if (!parm.getOldPassword().equals(user.getPassword())) {
+    public Result updatePassword(@RequestBody UpdatePassWordParm param) {
+        SysUser user = sysUserService.getById(param.getUserId());
+        if (!param.getOldPassword().equals(user.getPassword())) {
             return Result.error("原密码不正确");
         }
         // 更新条件
-        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getUserId, parm.getUserId()).eq(SysUser::getPassword, parm.getOldPassword());
-        // 更新密码
-        if (sysUserService.update(queryWrapper)) {
+        LambdaUpdateWrapper<SysUser> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(SysUser::getPassword, param.getPassword())
+                .eq(SysUser::getUserId, param.getUserId())
+                .eq(SysUser::getPassword, param.getOldPassword());
+
+        if (sysUserService.update(updateWrapper)) {
             return Result.success("密码修改成功");
         }
         return Result.error("密码修改失败");
