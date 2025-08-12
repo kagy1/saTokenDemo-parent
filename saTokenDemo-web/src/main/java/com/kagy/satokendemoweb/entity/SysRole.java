@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @TableName("sys_role")
 public class SysRole {
     @TableId(value = "role_id", type = IdType.AUTO)
-    private Long roleId;
+    private Integer roleId;
 
     private String roleName;
 

@@ -2,6 +2,7 @@ package com.kagy.satokendemoweb.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.kagy.satokendemoweb.Vo.AssignTreeVo;
 import com.kagy.satokendemoweb.entity.MakeMenuTree;
 import com.kagy.satokendemoweb.entity.SysMenu;
 import com.kagy.satokendemoweb.service.SysMenuService;
@@ -80,4 +81,6 @@ public class SysMenuController {
         List<SysMenu> parent = sysMenuService.getParent();
         return Result.success("查询成功", parent);
     }
+
+
 }

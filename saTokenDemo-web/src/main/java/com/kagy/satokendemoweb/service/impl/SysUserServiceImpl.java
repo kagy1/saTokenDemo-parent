@@ -1,11 +1,14 @@
 package com.kagy.satokendemoweb.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kagy.satokendemoweb.entity.SysUser;
-import com.kagy.satokendemoweb.entity.SysUserRole;
+import com.kagy.satokendemoweb.Vo.AssignTreeVo;
+import com.kagy.satokendemoweb.entity.*;
+import com.kagy.satokendemoweb.mapper.SysMenuMapper;
 import com.kagy.satokendemoweb.mapper.SysUserMapper;
+import com.kagy.satokendemoweb.service.SysMenuService;
 import com.kagy.satokendemoweb.service.SysUserRoleService;
 import com.kagy.satokendemoweb.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+
+    @Autowired
+    private SysMenuService sysMenuService;
+
+    @Autowired
+    private SysMenuMapper sysMenuMapper;
 
     @Override
     public IPage<SysUser> getUserListWithRoles(IPage<SysUser> page, LambdaQueryWrapper<SysUser> queryWrapper) {
@@ -108,6 +117,37 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             queryWrapper.eq(SysUserRole::getUserId, userId);
             sysUserRoleService.remove(queryWrapper);
         }
+    }
+
+    @Override
+    public AssignTreeVo getAssignTree(AssignTreeParm assignTreeParm) {
+        // 查询用户的信息
+        SysUser user = this.getById(assignTreeParm.getUserId());
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+        List<SysMenu> menuList = null;
+        // 判断是否是超级管理员
+        if (StrUtil.isNotBlank(user.getIsAdmin()) && user.getIsAdmin().equals("1")) {
+            // 是超级管理员，查询所有菜单
+            menuList = sysMenuService.list();
+        } else {
+            // 不是超级管理员，查询用户有权限的菜单
+            menuList = sysMenuService.getMenuByUserId(assignTreeParm.getUserId());
+        }
+        // 组装树
+        List<SysMenu> sysMenus = MakeMenuTree.makeTree(menuList, 0L);
+        // 查询用户角色原来的菜单
+        List<SysMenu> roleList = sysMenuService.getMenuByRoleId(assignTreeParm.getRoleId());
+        // 提取菜单ID列表
+        List<Long> ids = new ArrayList<>();
+        if (roleList != null && roleList.size() > 0) {
+            roleList.stream().filter(item -> item != null).forEach(item -> ids.add(item.getMenuId()));
+        }
+        AssignTreeVo assignTreeVo = new AssignTreeVo();
+        assignTreeVo.setMenuList(sysMenus);
+        assignTreeVo.setCheckList(ids.toArray());
+        return assignTreeVo;
     }
 }
 

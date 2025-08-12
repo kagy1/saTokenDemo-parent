@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.kagy.satokendemoweb.Vo.AssignTreeVo;
 import com.kagy.satokendemoweb.Vo.LoginVo;
+import com.kagy.satokendemoweb.entity.AssignTreeParm;
 import com.kagy.satokendemoweb.entity.LoginParam;
 import com.kagy.satokendemoweb.entity.SysUser;
 import com.kagy.satokendemoweb.entity.UserParam;
@@ -123,8 +125,16 @@ public class SysUserController {
             return Result.error("验证码已过期，请重新获取");
         }
         // 判断验证码是否正确
-        if (!sessionCode.equals(code)) {
+        if (!sessionCode.equalsIgnoreCase(code)) {
             return Result.error("验证码错误");
+        }
+
+        // 验证码正确，立即清除避免重复使用
+        session.removeAttribute("imageCode");
+
+        // 验证用户名和密码是否为空
+        if (StrUtil.isBlank(param.getUsername()) || StrUtil.isBlank(param.getPassword())) {
+            return Result.error("用户名和密码不能为空");
         }
 
         // 查询用户信息
@@ -141,6 +151,13 @@ public class SysUserController {
 
         return Result.success("登录成功", loginVo);
 
+    }
+
+    // 查询菜单树
+    @GetMapping("/getAssignTree")
+    public Result getAssingTree(AssignTreeParm parm) {
+        AssignTreeVo assignTreeVo = sysUserService.getAssignTree(parm);
+        return Result.success("查询成功", assignTreeVo);
     }
 
 }

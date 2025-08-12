@@ -1,11 +1,17 @@
 package com.kagy.satokendemoweb.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.kagy.satokendemoweb.Vo.AssignTreeVo;
+import com.kagy.satokendemoweb.entity.AssignTreeParm;
 import com.kagy.satokendemoweb.entity.MakeMenuTree;
 import com.kagy.satokendemoweb.entity.SysMenu;
+import com.kagy.satokendemoweb.entity.SysUser;
 import com.kagy.satokendemoweb.mapper.SysMenuMapper;
 import com.kagy.satokendemoweb.service.SysMenuService;
+import com.kagy.satokendemoweb.service.SysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +26,9 @@ import java.util.List;
  */
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements SysMenuService {
+
+    @Autowired
+    private SysMenuMapper sysMenuMapper;
 
     @Override
     public List<SysMenu> getParent() {
@@ -37,5 +46,15 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         // 组装菜单树
         List<SysMenu> tree = MakeMenuTree.makeTree(sysMenus, -1L);
         return tree;
+    }
+
+    @Override
+    public List<SysMenu> getMenuByUserId(Integer userId) {
+        return sysMenuMapper.getMenuByUserId(userId);
+    }
+
+    @Override
+    public List<SysMenu> getMenuByRoleId(Integer roleId) {
+        return sysMenuMapper.getMenuByRoleId(roleId);
     }
 }

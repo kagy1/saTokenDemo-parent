@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.kagy.satokendemoweb.entity.RoleParam;
+import com.kagy.satokendemoweb.entity.SaveMenyParm;
 import com.kagy.satokendemoweb.entity.SelectItem;
 import com.kagy.satokendemoweb.entity.SysRole;
 import com.kagy.satokendemoweb.service.SysRoleService;
@@ -76,5 +77,12 @@ public class SysRoleController {
             selectItems.add(vo);
         });
         return Result.success("查询成功", selectItems);
+    }
+
+    // 保存角色菜单
+    @PostMapping("/saveRoleMenu")
+    public Result saveRoleMenu(@RequestBody SaveMenyParm saveMenyParm) {
+
+        return null;
     }
 }

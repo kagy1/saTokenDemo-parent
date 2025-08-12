@@ -1,8 +1,11 @@
 package com.kagy.satokendemoweb.mapper;
 
-import com.kagy.satokendemoweb.entity.SysMenu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.kagy.satokendemoweb.entity.SysMenu;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -15,4 +18,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
+    List<SysMenu> getMenuByUserId(@Param("userId") Integer userId);
+
+    List<SysMenu> getMenuByRoleId(@Param("roleId") Integer roleId);
 }

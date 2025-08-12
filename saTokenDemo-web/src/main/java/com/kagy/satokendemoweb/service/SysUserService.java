@@ -3,6 +3,8 @@ package com.kagy.satokendemoweb.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.kagy.satokendemoweb.Vo.AssignTreeVo;
+import com.kagy.satokendemoweb.entity.AssignTreeParm;
 import com.kagy.satokendemoweb.entity.SysUser;
 
 /**
@@ -21,4 +23,7 @@ public interface SysUserService extends IService<SysUser> {
     void editUser(SysUser sysUser);
 
     void deleteUser(Long userId);
+
+    // 查询菜单树
+    AssignTreeVo getAssignTree(AssignTreeParm assignTreeParm);
 }
