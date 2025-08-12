@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.kagy.satokendemoweb.Vo.AssignTreeVo;
 import com.kagy.satokendemoweb.Vo.LoginVo;
-import com.kagy.satokendemoweb.entity.AssignTreeParm;
-import com.kagy.satokendemoweb.entity.LoginParam;
-import com.kagy.satokendemoweb.entity.SysUser;
-import com.kagy.satokendemoweb.entity.UserParam;
+import com.kagy.satokendemoweb.entity.*;
 import com.kagy.satokendemoweb.service.SysUserService;
 import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -158,6 +155,24 @@ public class SysUserController {
     public Result getAssingTree(AssignTreeParm parm) {
         AssignTreeVo assignTreeVo = sysUserService.getAssignTree(parm);
         return Result.success("查询成功", assignTreeVo);
+    }
+
+    // 更新密码
+    @PostMapping("/updatePassword")
+    public Result updatePassword(@RequestBody UpdatePassWordParm parm) {
+        SysUser user = sysUserService.getById(parm.getUserId());
+        if (!parm.getOldPassword().equals(user.getPassword())) {
+            return Result.error("原密码不正确");
+        }
+        // 更新条件
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getUserId, parm.getUserId()).eq(SysUser::getPassword, parm.getOldPassword());
+        // 更新密码
+        if (sysUserService.update(queryWrapper)) {
+            return Result.success("密码修改成功");
+        }
+        return Result.error("密码修改失败");
+
     }
 
 }
