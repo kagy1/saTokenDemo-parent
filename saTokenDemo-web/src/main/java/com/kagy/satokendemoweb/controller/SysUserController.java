@@ -10,6 +10,7 @@ import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.kagy.satokendemoweb.Vo.AssignTreeVo;
 import com.kagy.satokendemoweb.Vo.LoginVo;
 import com.kagy.satokendemoweb.entity.*;
+import com.kagy.satokendemoweb.service.SysMenuService;
 import com.kagy.satokendemoweb.service.SysUserService;
 import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,10 @@ import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,6 +43,8 @@ public class SysUserController {
     private SysUserService sysUserService;
     @Autowired
     private DefaultKaptcha defaultKaptcha;
+    @Autowired
+    private SysMenuService sysMenuService;
 
     @PostMapping
     public Result add(@RequestBody SysUser sysUser) {
@@ -175,6 +181,41 @@ public class SysUserController {
         }
         return Result.error("密码修改失败");
 
+    }
+
+    // 获取用户信息
+    @GetMapping("/getUserInfo")
+    public Result getUserInfo(Integer userId) {
+        // 根据id查询用户信息
+        SysUser user = sysUserService.getById(userId);
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+
+        List<SysMenu> menuList = null;
+        if (StrUtil.isNotBlank(user.getIsAdmin()) && user.getIsAdmin().equals("1")) {
+            // 超级管理员
+            menuList = sysMenuService.list();
+        } else {
+            menuList = sysMenuService.getMenuByUserId(userId);
+        }
+
+        // 处理权限列表
+        List<String> permissions = new ArrayList<>();
+        if (menuList != null && !menuList.isEmpty()) {
+            permissions = menuList.stream()
+                    .filter(item -> StrUtil.isNotEmpty(item.getCode()))
+                    .map(SysMenu::getCode)
+                    .collect(Collectors.toList());
+        }
+
+        // 设置返回值（无论权限是否为空都返回用户信息）
+        UserInfo userInfo = new UserInfo();
+        userInfo.setName(user.getNickName());
+        userInfo.setUserId(user.getUserId());
+        userInfo.setPermissons(permissions.toArray(new String[0])); // 修正拼写错误
+
+        return Result.success("查询成功", userInfo);
     }
 
 }
