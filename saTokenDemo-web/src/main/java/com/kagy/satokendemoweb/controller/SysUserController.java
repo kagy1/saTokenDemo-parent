@@ -248,6 +248,13 @@ public class SysUserController {
         return Result.success("查询成功", userInfo);
     }
 
+    @PostMapping("/logout")
+    public Result logout() {
+        StpUtil.logout();
+        return Result.success("退出成功");
+    }
+
+
 }
 
 
