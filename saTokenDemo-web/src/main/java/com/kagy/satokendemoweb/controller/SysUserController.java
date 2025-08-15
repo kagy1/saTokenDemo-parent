@@ -2,9 +2,7 @@ package com.kagy.satokendemoweb.controller;
 
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.jwt.JWT;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -28,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -148,10 +145,16 @@ public class SysUserController {
 
         // 查询用户信息
         LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysUser::getUsername, param.getUsername()).eq(SysUser::getPassword, param.getPassword());
+        queryWrapper.eq(SysUser::getUsername, param.getUsername());
         SysUser one = sysUserService.getOne(queryWrapper);
         if (one == null) {
-            return Result.error("用户名或密码错误");
+            return Result.error("用户名错误");
+        }
+        if (!one.getPassword().equals(param.getPassword())) {
+            return Result.error("密码错误");
+        }
+        if (one.getIsEnabled() == 0) {
+            return Result.error("用户已被禁用，请联系管理员");
         }
 
         // 使用 Sa-Token 进行登录
