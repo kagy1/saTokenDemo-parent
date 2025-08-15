@@ -6,5 +6,5 @@ import lombok.Data;
 public class UserInfo {
     private Integer userId;
     private String name;
-    private Object[] permissons;
+    private Object[] permissions;
 }

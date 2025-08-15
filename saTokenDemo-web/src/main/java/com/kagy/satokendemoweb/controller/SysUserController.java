@@ -1,6 +1,7 @@
 package com.kagy.satokendemoweb.controller;
 
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWT;
@@ -48,8 +49,8 @@ public class SysUserController {
     private DefaultKaptcha defaultKaptcha;
     @Autowired
     private SysMenuService sysMenuService;
-    @Autowired
-    private JwtProperties jwtProperties;
+//    @Autowired
+//    private JwtProperties jwtProperties;
 
     @PostMapping
     public Result add(@RequestBody SysUser sysUser) {
@@ -152,27 +153,32 @@ public class SysUserController {
         if (one == null) {
             return Result.error("用户名或密码错误");
         }
+
+        // 使用 Sa-Token 进行登录
+        StpUtil.login(one.getUserId());
+
         // 返回用户信息和toekn
         LoginVo loginVo = new LoginVo();
         loginVo.setUserId(one.getUserId());
         loginVo.setNickName(one.getNickName());
 
-        Date now = new Date();
-        // 根据配置的分钟数计算过期时间
-        Date expireDate = DateUtil.offsetMinute(now, jwtProperties.getExpiration());
+//        Date now = new Date();
+//        // 根据配置的分钟数计算过期时间
+//        Date expireDate = DateUtil.offsetMinute(now, jwtProperties.getExpiration());
 
-        // 生成JWT token
-        String token = JWT.create()
-                .setPayload("userId", one.getUserId())
-                .setPayload("username", one.getUsername())
-                .setIssuer(jwtProperties.getIssuer()) // 设置签发者，对应配置中的 issuer
-                .setIssuedAt(now) // 设置签发时间
-                .setExpiresAt(expireDate) // 设置过期时间
-                .setKey(jwtProperties.getSecret().getBytes()) // 设置密钥，对应配置中的 secret
-                .sign();
+        // 生成JWT token  替换为 Sa-Token
+//        String token = JWT.create()
+//                .setPayload("userId", one.getUserId())
+//                .setPayload("username", one.getUsername())
+//                .setIssuer(jwtProperties.getIssuer()) // 设置签发者，对应配置中的 issuer
+//                .setIssuedAt(now) // 设置签发时间
+//                .setExpiresAt(expireDate) // 设置过期时间
+//                .setKey(jwtProperties.getSecret().getBytes()) // 设置密钥，对应配置中的 secret
+//                .sign();
 
         // 将token设置到返回对象中
-        loginVo.setToken(token);
+//        loginVo.setToken(token);
+        loginVo.setToken(StpUtil.getTokenValue());
         return Result.success("登录成功", loginVo);
 
     }
@@ -234,7 +240,7 @@ public class SysUserController {
         UserInfo userInfo = new UserInfo();
         userInfo.setName(user.getNickName());
         userInfo.setUserId(user.getUserId());
-        userInfo.setPermissons(permissions.toArray(new String[0])); // 修正拼写错误
+        userInfo.setPermissions(permissions.toArray(new String[0])); // 修正拼写错误
 
         return Result.success("查询成功", userInfo);
     }

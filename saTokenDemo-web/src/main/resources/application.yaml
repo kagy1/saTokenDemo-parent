@@ -41,7 +41,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true  # 开启驼峰命名规则，自动将数据库字段转为驼峰命名。
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 开启 MyBatis 日志输出。
 
-jwt:
-  issuer: kagy-satoken-demo  # 签发者
-  secret: com.kagy  # 密钥
-  expiration: 30  # token 过期时间（单位：分钟）
+#jwt:
+#  issuer: kagy-satoken-demo  # 签发者
+#  secret: com.kagy  # 密钥
+#  expiration: 30  # token 过期时间（单位：分钟）
