@@ -54,25 +54,21 @@ public class MakeMenuTree {
                             item.getKeepTab() != null ? item.getKeepTab() : true
                     ));
 
-                    if (item.getParentId() == 0L && item.getType().equals("1")) {
-                        // 一级菜单需要重定向到第一个子菜单
-                        List<RouterVo> children = makeRouter(menuList, item.getMenuId());
-                        router.setChildren(children);
+                    // 递归获取子菜单
+                    List<RouterVo> children = makeRouter(menuList, item.getMenuId());
 
-                        // 设置重定向到第一个子路由
-                        if (!children.isEmpty()) {
+                    if (!children.isEmpty()) {
+                        // 有子菜单：设置子路由和重定向
+                        router.setChildren(children);
+                        if (item.getParentId() == 0L) {
+                            // 一级菜单且有子菜单，重定向到第一个子菜单
                             router.setRedirect(children.get(0).getPath());
                         }
                     } else {
-                        // 叶子节点或二级菜单
+                        // 没有子菜单：设置组件
                         router.setComponent(item.getUrl());
-
-                        // 检查是否有子菜单
-                        List<RouterVo> children = makeRouter(menuList, item.getMenuId());
-                        if (!children.isEmpty()) {
-                            router.setChildren(children);
-                        }
                     }
+
                     list.add(router);
                 });
         return list;
