@@ -1,16 +1,11 @@
 package com.kagy.satokendemoweb.service.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.kagy.satokendemoweb.Vo.AssignTreeVo;
-import com.kagy.satokendemoweb.entity.AssignTreeParm;
-import com.kagy.satokendemoweb.entity.MakeMenuTree;
+import com.kagy.satokendemoweb.utils.MakeMenuTree;
 import com.kagy.satokendemoweb.entity.SysMenu;
-import com.kagy.satokendemoweb.entity.SysUser;
 import com.kagy.satokendemoweb.mapper.SysMenuMapper;
 import com.kagy.satokendemoweb.service.SysMenuService;
-import com.kagy.satokendemoweb.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

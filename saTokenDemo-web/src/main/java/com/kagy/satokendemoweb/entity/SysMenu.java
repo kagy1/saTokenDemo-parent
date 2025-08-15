@@ -72,6 +72,12 @@ public class SysMenu implements Serializable {
     @ApiModelProperty(value = "更新时间")
     private LocalDateTime updateTime;
 
+    @ApiModelProperty(value = "是否隐藏")
+    private Boolean visible;
+
+    @ApiModelProperty(value = "是否添加到选项卡")
+    private Boolean keepTab;
+
     @TableField(exist = false)
     private List<SysMenu> children = new ArrayList<>();
 
@@ -80,5 +86,4 @@ public class SysMenu implements Serializable {
 
     @TableField(exist = false)
     private String label;
-
 }

@@ -11,6 +11,7 @@ import com.kagy.satokendemoweb.mapper.SysUserMapper;
 import com.kagy.satokendemoweb.service.SysMenuService;
 import com.kagy.satokendemoweb.service.SysUserRoleService;
 import com.kagy.satokendemoweb.service.SysUserService;
+import com.kagy.satokendemoweb.utils.MakeMenuTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

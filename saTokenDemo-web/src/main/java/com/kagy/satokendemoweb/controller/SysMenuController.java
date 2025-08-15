@@ -1,17 +1,21 @@
 package com.kagy.satokendemoweb.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.kagy.satokendemoweb.Vo.AssignTreeVo;
-import com.kagy.satokendemoweb.entity.MakeMenuTree;
+import com.kagy.satokendemoweb.Vo.RouterVo;
 import com.kagy.satokendemoweb.entity.SysMenu;
+import com.kagy.satokendemoweb.entity.SysUser;
 import com.kagy.satokendemoweb.service.SysMenuService;
+import com.kagy.satokendemoweb.service.SysUserService;
+import com.kagy.satokendemoweb.utils.MakeMenuTree;
 import com.kagy.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -26,6 +30,8 @@ import java.util.List;
 public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;
+    @Autowired
+    private SysUserService sysUserService;
 
     // 新增
     @PostMapping("/add")
@@ -80,6 +86,32 @@ public class SysMenuController {
     public Result getParent() {
         List<SysMenu> parent = sysMenuService.getParent();
         return Result.success("查询成功", parent);
+    }
+
+    // 获取菜单
+    @GetMapping("/getMenuList")
+    public Result getMenuList(Integer userId) {
+        // 获取用户的信息
+        SysUser user = sysUserService.getById(userId);
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+        // 菜单数据
+        List<SysMenu> menuList = null;
+        // 判断是否为超级管理员
+        if (StrUtil.isNotBlank(user.getIsAdmin()) && user.getIsAdmin().equals("1")) {
+            menuList = sysMenuService.list();
+        } else {
+            menuList = sysMenuService.getMenuByUserId(userId);
+        }
+        List<SysMenu> collect = null;
+        // 过滤菜单数据，去掉按钮
+        if (menuList != null && menuList.size() > 0) {
+            collect = menuList.stream().filter(item -> StrUtil.isNotBlank(item.getType()) && !item.getType().equals("2")).collect(Collectors.toList());
+        }
+        // 组装路由数据
+        List<RouterVo> routerVos = MakeMenuTree.makeRouter(collect, 0L);
+        return Result.success("查询成功", routerVos);
     }
 
 
