@@ -186,9 +186,18 @@ public class SysUserController {
 
     }
 
-    // 查询菜单树
+    // 角色管理分配权限，查询菜单树
     @GetMapping("/getAssignTree")
-    public Result getAssingTree(AssignTreeParm param) {
+    public Result getAssignTree(AssignTreeParm param) {
+        LambdaQueryWrapper<SysUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SysUser::getUserId, param.getUserId());
+        SysUser user = sysUserService.getOne(queryWrapper);
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+        if (user.getIsAdmin().equals("0")) {
+            return Result.error("非管理员，无权分配菜单");
+        }
         AssignTreeVo assignTreeVo = sysUserService.getAssignTree(param);
         return Result.success("查询成功", assignTreeVo);
     }
